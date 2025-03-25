@@ -29,7 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user.getRoles() != null) {
             for (Role role : user.getRoles()) {
                 authorities.add(new SimpleGrantedAuthority(role.getName()));
-                System.out.println("Added authority: " + role.getName());
             }
         }
 

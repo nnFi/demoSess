@@ -100,8 +100,6 @@ public class UserController {
     public ResponseEntity<?> getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        System.out.println("All authorities: " + authentication.getAuthorities());
-
         Map<String, Object> userInfo = new HashMap<>();
         userInfo.put("username", authentication.getName());
         userInfo.put("authorities", authentication.getAuthorities().stream()
