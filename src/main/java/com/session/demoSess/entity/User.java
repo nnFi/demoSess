@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import java.util.Collection;
 
 @Entity
+@Table(name = "app_users")
 public class User implements UserDetails {
 
     @Id
