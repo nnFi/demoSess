@@ -105,11 +105,4 @@ public class UserController {
         userInfo.put("isAuthenticated", authentication.isAuthenticated());
         return ResponseEntity.ok(userInfo);
     }
-
-    // For testing authentication with a simple endpoint
-    @GetMapping("/test-auth")
-    public ResponseEntity<?> testAuth() {
-        return ResponseEntity.ok(Map.of("message", "You are authenticated!"));
-    }
 }
-
