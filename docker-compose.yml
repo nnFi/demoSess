@@ -1,0 +1,12 @@
+version: '3.8'  # Verwende die passende Version je nach Bedarf
+
+services:
+  postgres:
+    image: postgres:17
+    container_name: postgres-container_sec
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: security_test
+    ports:
+      - "5432:5432"
