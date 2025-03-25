@@ -41,7 +41,20 @@ public class SecurityConfig {
                 .requestMatchers("/api/public/**").permitAll()
                 .anyRequest().authenticated()
             )
-            .formLogin(form -> form.disable())
+            .formLogin(form -> form
+                .loginPage("/login")
+                .loginProcessingUrl("/perform-login")
+                .successHandler((request, response, authentication) -> {
+                    response.setStatus(200);
+                    response.getWriter().write("{\"status\":\"success\",\"message\":\"Login successful\"}");
+                })
+                .failureHandler((request, response, exception) -> {
+                    response.setStatus(401);
+                    response.setContentType("application/json");
+                    response.getWriter().write("{\"status\":\"error\",\"message\":\"Invalid username or password\"}");
+                })
+                .permitAll()
+            )
             .logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout", "POST"))
                 .logoutSuccessHandler((request, response, authentication) -> {
