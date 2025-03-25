@@ -6,4 +6,4 @@
 
 Project has dependency and application.properties config for flyway but it is not implemented yet
 
-!!! THIS IS STATELESS !!!
+!!! THIS IS STATEFUL !!!
