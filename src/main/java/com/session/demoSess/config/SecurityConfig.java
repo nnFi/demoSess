@@ -45,8 +45,6 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form
-                .loginPage("/login")
-                .loginProcessingUrl("/api/login")
                 .successHandler((request, response, authentication) -> {
                     response.setStatus(HttpServletResponse.SC_OK);
                     response.setContentType("application/json");
@@ -69,9 +67,15 @@ public class SecurityConfig {
             .logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout", "POST"))
                 .logoutSuccessHandler((request, response, authentication) -> {
-                    response.setStatus(HttpServletResponse.SC_OK);
-                    response.setContentType("application/json");
-                    response.getWriter().write("{\"status\":\"success\",\"message\":\"Logout successful\"}");
+                    try {
+                        response.setStatus(HttpServletResponse.SC_OK);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"status\":\"success\",\"message\":\"Logout successful\"}");
+                    } catch (IOException e) {
+                        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"status\":\"error\",\"message\":\"An error occurred during logout\"}");
+                    }
                 })
                 .invalidateHttpSession(true)
                 .deleteCookies("JSESSIONID")
