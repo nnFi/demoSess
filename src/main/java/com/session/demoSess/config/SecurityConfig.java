@@ -19,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import jakarta.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 @Configuration
@@ -47,20 +48,29 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .loginProcessingUrl("/perform-login")
                 .successHandler((request, response, authentication) -> {
-                    response.setStatus(200);
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.setContentType("application/json");
                     response.getWriter().write("{\"status\":\"success\",\"message\":\"Login successful\"}");
                 })
                 .failureHandler((request, response, exception) -> {
-                    response.setStatus(401);
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     response.setContentType("application/json");
-                    response.getWriter().write("{\"status\":\"error\",\"message\":\"Invalid username or password\"}");
+                    try {
+                        response.getWriter().write("{\"status\":\"error\",\"message\":\"Invalid username or password\"}");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        if (!response.isCommitted()) {
+                            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing the response");
+                        }
+                    }
                 })
                 .permitAll()
             )
             .logout(logout -> logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout", "POST"))
                 .logoutSuccessHandler((request, response, authentication) -> {
-                    response.setStatus(200);
+                    response.setStatus(HttpServletResponse.SC_OK);
+                    response.setContentType("application/json");
                     response.getWriter().write("{\"status\":\"success\",\"message\":\"Logout successful\"}");
                 })
                 .invalidateHttpSession(true)
